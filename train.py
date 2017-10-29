@@ -7,7 +7,7 @@ import scipy.io.wavfile as wav
 from keras.callbacks import ModelCheckpoint
 
 
-look_back = 1
+look_back = 1000
 layers = 3
 epochs = 1
 verbose = 1
@@ -32,9 +32,23 @@ for name in names:
     train_size = int(len(data) * 0.1)
     data = data[0:train_size]
 
-    trainX, trainY = func.create_dataset(data, look_back)
+    # print(data)
 
-    trainX = np.reshape(trainX, (trainX.shape[0], 1,trainX.shape[1]))
+
+    # print(trainX)
+    # print(data.shape)
+
+
+    print(data.shape)
+    trainX, trainY = func.create_dataset(data, look_back)
+    # trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
+    # trainX = np.reshape(trainX, (trainX.shape[0],  trainX.shape[1], 1))
+    # trainY = np.reshape(trainY, (trainX.shape[0], 1, trainY.shape[1]))
+    print(trainX)
+    print(trainY)
+    # print(trainX)
+    print(trainX.shape)
+    print(trainY.shape)
 
     model = func.create_model(look_back=look_back,layers=layers)
 
@@ -44,6 +58,8 @@ for name in names:
     callbacks_list = [checkpoint]
 
     print('fit')
-    model.fit(trainX, trainY, epochs=epochs, batch_size=256, verbose=verbose)
+    model.fit(trainX, trainY, epochs=epochs, batch_size=256, verbose=verbose,callbacks=callbacks_list)
+    model.save("model.h5")
+    model.save_weights('my_model_weights.h5')
 
 
